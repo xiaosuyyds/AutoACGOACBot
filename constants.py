@@ -11,6 +11,8 @@ OPENAI_BASE_URL = ""
 # OPENAI_API_KEY优先从环境变量 OPENAI_API_KEY 中获取，如果没有，则从这里获取
 OPENAI_API_KEY = ""
 
+# 需要使用的LLM模型
+LLM_MODEL = "gpt-4o"
 
 LLM_SYSTEM_PROMPT = """
 You are a C++ programmer.

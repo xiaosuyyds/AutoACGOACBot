@@ -16,7 +16,7 @@ openai.api_key = api_key
 
 def generate_answer(problem_markdown):
     completion = openai.chat.completions.create(
-        model="gpt-4o",
+        model=constants.LLM_MODEL,
         messages=[
             {"role": "system", "content": constants.LLM_SYSTEM_PROMPT},
             {"role": "user", "content": problem_markdown + "\n" + constants.LLM_PROMPT},
