@@ -1,0 +1,4 @@
+selenium
+requests
+beautifulsoup4
+openai>=1.0
