@@ -2,6 +2,7 @@ import requests
 
 
 def send_explanation(access_token, question_id, answer):
+    # 不建议使用
     url = "https://gateway.acgo.cn/acgoForum/post/add"
     headers = {
         "Access-Token": access_token,

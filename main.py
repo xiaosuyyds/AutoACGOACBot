@@ -1,7 +1,6 @@
 import re
 import time
 import generate_answer
-import explanation_sender
 import get_problem
 import submit_code
 import auto_login
@@ -63,18 +62,10 @@ def auto_ac_problem(problem_id):
 
 if __name__ == '__main__':
     # 需要完成的题目id
-    problem_id = 1
+    problem_id = 5
     result, answer = auto_ac_problem(problem_id)
     print(result)
     ac_flag = True
     for i in result["list"]:
         if i["result"] != "AC":
             ac_flag = False
-
-    if ac_flag:
-        print("测试点全部通过正在提交题解")
-        result = explanation_sender.send_explanation(auto_get_access_token(), problem_id, answer)
-        print(result)
-        print("题解提交完毕")
-    else:
-        print("测试点未全部通过，跳过提交题解")
