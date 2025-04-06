@@ -24,6 +24,7 @@
 </p>
 
 ### 这是一个基于LLM的ACGO刷题平台的自动答题机器人
+### ~~真·AC自动机~~
 
 ## ⚠️️warning ⚠️声明
 #### ***1.请勿滥用，本项目仅用于学习和测试！请勿滥用，本项目仅用于学习和测试！请勿滥用，本项目仅用于学习和测试！***
@@ -55,9 +56,9 @@ pip install -r requirements.txt
 python main.py
 ```
 
-Tips: 如果自动登录出现问题请参照selenium的文档自行修复
+Tips: 如果自动登录出现问题请参照`selenium`的文档自行修复
 
-实在不行还可自行登录，将获取到的AccessToken放到项目目录的`access_token.json`文件内，格式如下: 
+实在不行还可自行登录，将获取到的`AccessToken`（可抓包也可从cookie拿，cookie里面叫`user_token`）放到项目目录的`access_token.json`文件内，格式如下: 
 ```json
 {
     "access_token": "你的AccessToken"

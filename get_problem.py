@@ -96,6 +96,7 @@ def problem_info_2_md(problem_info: BeautifulSoup, problem_statistics: dict):
             problem_pass_rates[i] = rate
 
     problem_items = []
+    input_output_samples = []
 
     for problem_item in filter_class_start("info_item", problem_info.find_all("div")):
         item_title = problem_item.find("h4").text
@@ -156,6 +157,7 @@ def problem_info_2_md(problem_info: BeautifulSoup, problem_statistics: dict):
             for item_examples in item_example_list:
                 item_examples = filter_class_start("Example_example_", item_examples.find_all("div"))
                 item_examples_content = []
+                input_output_sample = {}
                 for item_example in item_examples:
                     item_example_title = filter_class_start("Example_exampleTitle", item_example.find_all("div"))
                     item_example_title = item_example_title[0].find("p").text
@@ -168,7 +170,13 @@ def problem_info_2_md(problem_info: BeautifulSoup, problem_statistics: dict):
                         "content": item_example_content
                     }
                     item_examples_content.append(item_example_input)
+                    if item_example_title.startswith("输入"):
+                        input_output_sample["input"] = item_example_input["content"]
+                    elif item_example_title.startswith("输出"):
+                        input_output_sample["output"] = item_example_input["content"]
+
                 item_content.append(item_examples_content)
+                input_output_samples.append(input_output_sample)
 
         problem_items.append({
             "title": item_title,
@@ -213,7 +221,7 @@ def problem_info_2_md(problem_info: BeautifulSoup, problem_statistics: dict):
                     mark_down += f"#### {item_example['title']}\n\n"
                     mark_down += f"```text\n{item_example['content']}\n```\n"
         mark_down += "\n"
-    return format_markdown(mark_down)
+    return format_markdown(mark_down), input_output_samples
 
 
 def get_problem_statistics(problem_id):

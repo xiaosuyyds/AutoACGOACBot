@@ -15,29 +15,69 @@ openai.api_key = api_key
 
 
 def generate_answer(problem_markdown):
-    completion = openai.chat.completions.create(
-        model=constants.LLM_MODEL,
-        messages=[
+    messages = [
             {"role": "system", "content": constants.LLM_SYSTEM_PROMPT},
             {"role": "user", "content": problem_markdown + "\n" + constants.LLM_PROMPT},
-        ],
-        stream=True,
-        temperature=0.2,
-        max_tokens=4096,
-    )
-    answer = ""
-    for chunk in completion:
-        if chunk.choices[0].delta.content is not None:
-            answer += chunk.choices[0].delta.content
-            print(chunk.choices[0].delta.content, end="")
-            code_block = answer.split("```cpp\n", 1)
-            if len(code_block) > 1 and code_block[1] and "```" in code_block[1]:
-                break
-    # 提取代码块
-    code_block = answer.split("```cpp\n", 1)[1]
-    if code_block:
-        code_block = code_block.split("\n```")[0]
+        ]
+    for i in range(3):
+        try:
+            completion = openai.chat.completions.create(
+                model=constants.LLM_MODEL,
+                messages=messages,
+                stream=True,
+                temperature=0.4,
+                max_tokens=32768,
+            )
+            answer = ""
+            for chunk in completion:
+                if chunk.choices[0].delta.content is not None:
+                    answer += chunk.choices[0].delta.content
+                    # print(chunk.choices[0].delta.content, end="")
+            code_block = answer.split("```cpp\n", 1)[1]
+            if code_block:
+                code_block = code_block.split("\n```")[0]
+            else:
+                code_block = answer.split("```", 1)[1]
+                code_block = code_block.split("```")[0]
+            break
+        except Exception as e:
+            print(f"生成回复遇到异常: {repr(e)}\n正在重试")
     else:
-        code_block = answer.split("```", 1)[1]
-        code_block = code_block.split("```")[0]
-    return code_block
+        raise Exception("生成回复遇到异常")
+    messages.append({"role": "assistant", "content": answer})
+    # print(answer)
+    # 提取代码块
+    return code_block, messages
+
+
+def fix_answer(content, messages):
+    messages.append({"role": "user", "content": content})
+    for i in range(3):
+        try:
+            completion = openai.chat.completions.create(
+                model=constants.LLM_MODEL,
+                messages=messages,
+                stream=True,
+                temperature=0.4,
+                max_tokens=32768,
+            )
+            answer = ""
+            for chunk in completion:
+                if chunk.choices[0].delta.content is not None:
+                    answer += chunk.choices[0].delta.content
+                    # print(chunk.choices[0].delta.content, end="")
+            code_block = answer.split("```cpp\n", 1)[1]
+            if code_block:
+                code_block = code_block.split("\n```")[0]
+            else:
+                code_block = answer.split("```", 1)[1]
+                code_block = code_block.split("```")[0]
+            break
+        except Exception as e:
+            print(f"生成回复遇到异常: {repr(e)}\n正在重试")
+    else:
+        raise Exception("生成回复遇到异常")
+
+    messages.append({"role": "assistant", "content": answer})
+
+    return code_block, messages

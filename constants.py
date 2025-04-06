@@ -11,8 +11,13 @@ OPENAI_BASE_URL = ""
 # OPENAI_API_KEY优先从环境变量 OPENAI_API_KEY 中获取，如果没有，则从这里获取
 OPENAI_API_KEY = ""
 
+# C++ 编译器路径 (例如 "g++", "clang++")
+COMPILER_PATH = r"C:\mingw64\bin\g++.exe"
+
 # 需要使用的LLM模型
-LLM_MODEL = "gpt-4o"
+# LLM_MODEL = "gemini-2.5-pro-exp-03-25"
+LLM_MODEL = "gemini-2.0-flash"
+# LLM_MODEL = "gemini-2.0-flash-thinking-exp-01-21"
 
 LLM_SYSTEM_PROMPT = """
 You are a C++ programmer.
@@ -26,5 +31,10 @@ LLM_PROMPT = """
 Please use C++ to complete the above questions, including the input and output parts.
 Please put the final code inside the markdown code block. and let's step by step.
 """
+
+
+MAX_RETRY_COUNT = 3
+MAX_FIX_COUNT = 5
+
 
 PMS_QUESTION_VERSION_ID_REGEX = r'"questionVersionId":\s*(\d+)'
